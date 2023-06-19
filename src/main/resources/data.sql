@@ -5,9 +5,11 @@ insert into categories (id, name) values
 (4, 'category 4'),
 (5, 'category 5'),
 (6, 'category 6');
+alter table categories alter column id restart with 7;
 
 insert into products(id, name, price, category_id) values
 (1, 'product 1', 10.21, 1),
 (2, 'product 2', 12.34, 1),
 (3, 'product 3', 200.22, 2),
 (4, 'product 4', 123.45, 2);
+alter table products alter column id restart with 5;

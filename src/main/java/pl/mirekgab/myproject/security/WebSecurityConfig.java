@@ -26,11 +26,10 @@ public class WebSecurityConfig {
                 .cors().disable()
                 .csrf().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll());
-        http
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                //TODO will be changed after completion of work with functionality
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
                 .addFilterBefore(new JwtAuthorizationFilter(secret), UsernamePasswordAuthenticationFilter.class);
         http.headers().frameOptions().disable();
         return http.build();

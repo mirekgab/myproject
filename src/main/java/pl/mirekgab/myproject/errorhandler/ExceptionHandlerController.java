@@ -13,13 +13,13 @@ public class ExceptionHandlerController {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleRuntimeException(final RuntimeException ex) {
-        log.info(ex.getMessage());
+        log.info("myproject: "+ex.getMessage());
         return ex.getMessage();
     }
     @ExceptionHandler(AppRuntimeException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public String handleAppRuntimeException(final RuntimeException ex) {
-        log.info(ex.getMessage());
+        log.info("myproject: "+ex.getMessage());
         return ex.getMessage();
     }
 
