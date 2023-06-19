@@ -5,7 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.mirekgab.myproject.errorhandler.AppRuntimeException;
+import pl.mirekgab.myproject.category.dto.CategoryDTO;
+import pl.mirekgab.myproject.category.dto.CreateCategoryDTO;
+import pl.mirekgab.myproject.category.exception.CategoryIsUsedException;
+import pl.mirekgab.myproject.category.exception.CategoryNotFoundException;
 import pl.mirekgab.myproject.product.ProductRepository;
 
 import java.util.List;
@@ -34,7 +37,7 @@ public class CategoryService {
 
     public CategoryDTO updateCategory(CategoryDTO editCategoryDTO) {
         Category category = categoryRepository.findById(editCategoryDTO.id()).orElseThrow(
-                () -> new AppRuntimeException(String.format("category with id %d not exist", editCategoryDTO.id()))
+                () -> new CategoryNotFoundException(editCategoryDTO.id())
         );
         category.setName(editCategoryDTO.name());
         return categoryMapper.mapToCategoryDTO(categoryRepository.save(category));
@@ -42,11 +45,18 @@ public class CategoryService {
 
     public void deleteCategory(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new AppRuntimeException(String.format("category with id %d not exists", id));
+            throw new CategoryNotFoundException(id);
         }
         if (productRepository.usedCategoryId(id)>0) {
-            throw new AppRuntimeException(String.format("category with id %d is used in products", id));
+            throw new CategoryIsUsedException(id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    public CategoryDTO getCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(()->new CategoryNotFoundException(categoryId));
+
+        return categoryMapper.mapToCategoryDTO(category);
     }
 }

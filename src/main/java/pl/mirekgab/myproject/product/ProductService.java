@@ -7,7 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.mirekgab.myproject.category.Category;
 import pl.mirekgab.myproject.category.CategoryRepository;
+import pl.mirekgab.myproject.category.exception.CategoryNotFoundException;
 import pl.mirekgab.myproject.errorhandler.AppRuntimeException;
+import pl.mirekgab.myproject.product.dto.CreateProductDTO;
+import pl.mirekgab.myproject.product.dto.ProductDTO;
+import pl.mirekgab.myproject.product.dto.UpdateProductDTO;
+import pl.mirekgab.myproject.product.exception.ProductNotFoundException;
 
 import java.util.List;
 
@@ -26,11 +31,11 @@ public class ProductService {
     }
 
     public ProductDTO createProduct(CreateProductDTO newProduct) {
-        if (newProduct==null) {
+        if (newProduct == null) {
             throw new AppRuntimeException("product is null");
         }
         Category category = categoryRepository.findById(newProduct.categoryId()).orElseThrow(
-                () -> new AppRuntimeException(String.format("category with id %d not exist", newProduct.categoryId()))
+                () -> new CategoryNotFoundException(newProduct.categoryId())
         );
         Product product = new Product.ProductBuilder()
                 .category(category)
@@ -40,4 +45,23 @@ public class ProductService {
         return productMapper.mapEntityToDTO(productRepository.save(product));
     }
 
+    public ProductDTO updateProduct(UpdateProductDTO updateProduct) {
+        Product product = productRepository.findById(updateProduct.id()).orElseThrow(
+                () -> new ProductNotFoundException(updateProduct.id()));
+
+        Category category = categoryRepository.findById(updateProduct.categoryId()).orElseThrow(() ->
+                new CategoryNotFoundException(updateProduct.categoryId()));
+
+        product.setName(updateProduct.name());
+        product.setCategory(category);
+
+        return productMapper.mapEntityToDTO(productRepository.save(product));
+    }
+
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
+        productRepository.deleteById(id);
+    }
 }

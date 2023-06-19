@@ -17,7 +17,7 @@ public class ExceptionHandlerController {
         return ex.getMessage();
     }
     @ExceptionHandler(AppRuntimeException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleAppRuntimeException(final RuntimeException ex) {
         log.info("myproject: "+ex.getMessage());
         return ex.getMessage();

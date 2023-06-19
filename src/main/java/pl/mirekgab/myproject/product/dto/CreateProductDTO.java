@@ -1,4 +1,4 @@
-package pl.mirekgab.myproject.product;
+package pl.mirekgab.myproject.product.dto;
 
 import java.math.BigDecimal;
 

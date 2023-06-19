@@ -1,6 +1,6 @@
-package pl.mirekgab.myproject.product;
+package pl.mirekgab.myproject.product.dto;
 
-import pl.mirekgab.myproject.category.CategoryDTO;
+import pl.mirekgab.myproject.category.dto.CategoryDTO;
 
 import java.math.BigDecimal;
 
